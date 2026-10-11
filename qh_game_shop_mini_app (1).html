@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <title>QH Game Shop</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root { color-scheme: dark; --bg:#111827; --panel:#1f2937; --cyan:#22d3ee; --green:#34d399; --muted:#aab4c4; }
+    * { box-sizing:border-box; margin:0; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
+    body { background:linear-gradient(145deg,#0b1020,#172554); color:#f9fafb; min-height:100vh; padding:16px 14px 34px; }
+    .container { max-width:900px; margin:auto; }
+    header { text-align:center; padding:24px 8px 18px; }
+    .logo { font-size:42px; margin-bottom:8px; }
+    h1 { font-size:27px; line-height:1.2; color:var(--cyan); }
+    header p { margin-top:9px; color:var(--muted); font-size:14px; }
+    .notice { background:#172554; border:1px solid #1d4ed8; padding:12px 14px; border-radius:12px; color:#dbeafe; font-size:13px; line-height:1.5; margin:10px 0 22px; }
+    .section-heading { color:var(--green); font-size:19px; margin:22px 0 14px; }
+    .games-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:13px; }
+    .game-card { background:rgba(31,41,55,.92); border:1px solid #374151; border-radius:16px; padding:18px; text-align:center; }
+    .game-card h3 { color:var(--cyan); font-size:18px; margin-bottom:8px; }
+    .game-card p { color:var(--muted); font-size:13px; min-height:20px; }
+    .price { color:var(--green); font-weight:800; font-size:22px; margin:13px 0; }
+    button { width:100%; border:0; border-radius:10px; padding:12px 14px; font-size:15px; font-weight:750; color:#07111f; background:linear-gradient(90deg,#22d3ee,#38bdf8); cursor:pointer; }
+    button:active { transform:scale(.99); }
+    .secondary { margin-top:12px; background:#374151; color:#fff; }
+    .all-games { display:none; }
+    .all-games.show { display:block; }
+    .payment { margin-top:28px; padding:19px; border-radius:16px; background:rgba(31,41,55,.95); border:1px solid #374151; }
+    .bank-info { background:#111827; padding:15px; border-radius:12px; line-height:1.8; overflow-wrap:anywhere; }
+    .bank-info span { color:var(--cyan); font-weight:700; }
+    .qr-box { margin:16px auto; max-width:320px; text-align:center; background:#fff; color:#111827; border-radius:12px; padding:14px; }
+    .qr-box img { width:min(100%,240px); height:auto; display:block; margin:auto; }
+    .qr-box p { margin-top:8px; font-size:13px; }
+    .note { margin-top:14px; background:#422006; border-left:3px solid #f59e0b; color:#fde68a; padding:13px; border-radius:8px; font-size:13px; line-height:1.6; }
+    footer { text-align:center; margin-top:26px; color:#9ca3af; font-size:12px; line-height:1.8; }
+    @media (max-width:420px) { h1{font-size:24px} .games-grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">🎮</div>
+    <h1>QH GAME SHOP</h1>
+    <p>Mua key game nhanh chóng • Hỗ trợ qua Telegram</p>
+  </header>
+
+  <div class="notice">
+    👋 Chào mừng bạn đến QH Game Shop. Chọn sản phẩm để gửi yêu cầu đặt hàng cho bot.
+    Đơn hàng chỉ được xác nhận sau khi shop kiểm tra thanh toán.
+  </div>
+
+  <h2 class="section-heading">🔥 Sản phẩm nổi bật</h2>
+  <div class="games-grid" id="main-games">
+    <article class="game-card">
+      <h3>🔥 KEY FREE FIRE</h3><p>Key kích hoạt</p>
+      <div class="price">20.000đ</div>
+      <button onclick="orderProduct('KEY FREE FIRE', 20000)">MUA NGAY</button>
+    </article>
+    <article class="game-card">
+      <h3>🏆 KEY LIÊN QUÂN</h3><p>Key game</p>
+      <div class="price">20.000đ</div>
+      <button onclick="orderProduct('KEY LIÊN QUÂN', 20000)">MUA NGAY</button>
+    </article>
+    <article class="game-card">
+      <h3>🎯 TẤT CẢ CÁC GAME</h3><p>Roblox, PUBG, Steam và nhiều game khác</p>
+      <div class="price">Xem danh sách</div>
+      <button onclick="showAllGames()">XEM TẤT CẢ</button>
+    </article>
+  </div>
+
+  <section class="all-games" id="all-games">
+    <h2 class="section-heading">📋 Danh sách game</h2>
+    <div class="games-grid">
+      <article class="game-card"><h3>🧱 Roblox</h3><p>Key & Giftcard</p><div class="price">Liên hệ</div><button onclick="contactProduct('Roblox')">HỎI GIÁ</button></article>
+      <article class="game-card"><h3>🔫 PUBG Mobile</h3><p>Key & Pass</p><div class="price">Liên hệ</div><button onclick="contactProduct('PUBG Mobile')">HỎI GIÁ</button></article>
+      <article class="game-card"><h3>🎮 Steam Key</h3><p>Game bản quyền</p><div class="price">Liên hệ</div><button onclick="contactProduct('Steam Key')">HỎI GIÁ</button></article>
+      <article class="game-card"><h3>💎 Genshin Impact</h3><p>Key & nạp</p><div class="price">Liên hệ</div><button onclick="contactProduct('Genshin Impact')">HỎI GIÁ</button></article>
+      <article class="game-card"><h3>⚡ Minecraft</h3><p>Key game</p><div class="price">Liên hệ</div><button onclick="contactProduct('Minecraft')">HỎI GIÁ</button></article>
+      <article class="game-card"><h3>🎯 Epic Games</h3><p>Key game</p><div class="price">Liên hệ</div><button onclick="contactProduct('Epic Games')">HỎI GIÁ</button></article>
+    </div>
+    <button class="secondary" onclick="hideAllGames()">ĐÓNG DANH SÁCH</button>
+  </section>
+
+  <section class="payment">
+    <h2 class="section-heading" style="text-align:center;margin-top:0">🏦 Thông tin thanh toán</h2>
+    <div class="bank-info">
+      <p>Ngân hàng: <span>Vietcombank</span></p>
+      <p>Số tài khoản: <span>9964447934</span></p>
+      <p>Chủ tài khoản: <span>Trần Quang Huy</span></p>
+      <p>Nội dung chuyển khoản: <span>QHKEY + mã đơn</span></p>
+    </div>
+    <div class="qr-box">
+      <img src="https://img.vietqr.io/image/VCB-9964447934-compact2.png?amount=0&addInfo=QHKEY&accountName=Tran%20Quang%20Huy" alt="Mã QR chuyển khoản Vietcombank">
+      <p>Mở ứng dụng ngân hàng và quét mã QR. Kiểm tra kỹ tên người nhận trước khi chuyển khoản.</p>
+    </div>
+    <div class="note">⚠️ Lưu ý: Trang này mới là giao diện Mini App. Nút mua sẽ gửi thông tin sản phẩm cho bot, nhưng bot cần được lập trình xử lý đơn hàng; trang web không tự xác minh giao dịch hoặc tự gửi key. Không chuyển tiền nếu thông tin người nhận không khớp.</div>
+  </section>
+
+  <footer>
+    <p>🛒 QH Game Shop</p>
+    <p>Liên hệ Telegram: @shop_qh_key</p>
+  </footer>
+</div>
+<script>
+  const tg = window.Telegram && window.Telegram.WebApp;
+  if (tg) { tg.ready(); tg.expand(); }
+
+  function orderProduct(name, price) {
+    const payload = { action: "order", product: name, price: price, currency: "VND" };
+    if (tg && tg.initData) {
+      tg.sendData(JSON.stringify(payload));
+      if (tg.showAlert) tg.showAlert("Đã gửi yêu cầu đặt hàng cho bot. Vui lòng kiểm tra tin nhắn với bot.");
+    } else {
+      alert("Bạn hãy mở trang này bên trong Telegram Mini App để gửi yêu cầu đặt hàng.");
+    }
+  }
+  function contactProduct(name) {
+    const payload = { action: "ask_price", product: name };
+    if (tg && tg.initData) {
+      tg.sendData(JSON.stringify(payload));
+    } else {
+      alert("Hãy mở Mini App từ bot Telegram để gửi yêu cầu hỏi giá: " + name);
+    }
+  }
+  function showAllGames() {
+    document.getElementById("all-games").classList.add("show");
+    document.getElementById("all-games").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function hideAllGames() {
+    document.getElementById("all-games").classList.remove("show");
+    document.getElementById("main-games").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+</script>
+</body>
+</html>
